@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Photobooth</title>
+</head>
+<body>
+  <div class="photobooth">
+    <div class="viewfinder">
+      <video id="video" autoplay></video>
+      <canvas id="canvas"></canvas>
+      <div id="timer-display" class="timer-display"></div>
+    </div>
+    <div class="controls">
+      <button id="snap" class="arcade-button">Snap Photo 📸</button>
+      <button id="multi-snap" class="arcade-button">Snap 4 Photos 📸</button>
+      <button id="download" class="arcade-button">Download Photo 💾</button>
+      <select id="timer-options" class="arcade-button">
+        <option value="5">5 Seconds</option>
+        <option value="10">10 Seconds</option>
+      </select>
+      <button id="retake" class="arcade-button">Retake Photo</button>
+      <button id="back" class="arcade-button">Back to Homepage</button>
+    </div>
+  </div>
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #ffe6f0, #ffcce6);
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .photobooth {
+      text-align: center;
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .viewfinder {
+      position: relative;
+      width: 55%;
+      max-width: 550px;
+      margin: 20px;
+    }
+
+    video, canvas {
+      width: 100%;
+      border: 3px solid #ff99cc;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px 5px rgba(255, 153, 204, 0.7);
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 20px;
+    }
+    body {
+    background-image: url('assets/images/boothbg.jpg'); /* Relative path */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    color: white; /* Adjust text color to be more readable on the background */
+    font-family: 'ArcadeClassic', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+    .arcade-button {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: white;
+      background-color: #ff66b2;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 4px #cc528f;
+    }
+
+    .arcade-button:hover {
+      transform: scale(1.1);
+      background-color: #ff4da6;
+    }
+
+    .arcade-button:active {
+      box-shadow: 0 2px #cc528f;
+      transform: translateY(4px);
+    }
+
+    .timer-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: #ff4da6;
+      display: none;
+    }
+</style>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snap = document.getElementById('snap');
+    const multiSnap = document.getElementById('multi-snap');
+    const download = document.getElementById('download');
+    const timerOptions = document.getElementById('timer-options');
+    const retake = document.getElementById('retake');
+    const backButton = document.getElementById('back');
+    const timerDisplay = document.getElementById('timer-display');
+    const context = canvas.getContext('2d');
+    const frame = new Image();
+    frame.src = 'assets/images/frame1.png'; // Default frame image
+
+    let timer = 5;
+    let countdown;
+
+    // Sound effects
+    const snapSound = new Audio('assets/sounds/shutter1.mp3');
+    const timerSound = new Audio('assets/sounds/timer.mp3');
+
+    // Set the default size (4:3)
+    canvas.width = 800;
+    canvas.height = 600;
+
+    // Get access to the camera
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+        .then((stream) => {
+          video.srcObject = stream;
+          video.style.transform = "scale(-1, 1)";  // Mirror the video
+        })
+        .catch((err) => {
+          console.error(`Error: ${err}`);
+        });
+    }
+    startCamera();
+
+    // Handle timer selection
+    timerOptions.addEventListener('change', (e) => {
+      timer = parseInt(e.target.value, 10);
+    });
+
+    // Trigger photo capture
+    snap.addEventListener('click', () => {
+      startTimer(timer, takePhoto);
+    });
+
+    // Take 4 photos in one frame
+    multiSnap.addEventListener('click', () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      const intervals = [0, 5000, 10000, 15000];
+      let count = 0;
+
+      const takePhotos = () => {
+        if (count < intervals.length) {
+          startTimer(timer, () => {
+            snapSound.play();
+            context.save();
+            context.scale(-1, 1); // Mirror each photo
+            context.drawImage(
+              video,
+              -((count % 2) * canvas.width / 2 + canvas.width / 2),
+              Math.floor(count / 2) * canvas.height / 2,
+              canvas.width / 2,
+              canvas.height / 2
+            );
+            context.restore();
+
+            if (count === intervals.length - 1) {
+              context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+            }
+            count++;
+            takePhotos();
+          });
+        }
+      };
+
+      takePhotos();
+    });
+
+    // Download the photo
+    download.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = "airuu's 20th Birthday.png";
+      link.click();
+    });
+
+    // Retake photo
+    retake.addEventListener('click', () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      snap.click();
+    });
+
+    // Back to homepage
+    backButton.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    // Start the timer countdown
+    function startTimer(duration, callback) {
+      timerSound.play();
+      countdown = duration;
+      timerDisplay.style.display = 'block';
+      timerDisplay.textContent = countdown;
+      const timerInterval = setInterval(() => {
+        countdown -= 1;
+        timerDisplay.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.style.display = 'none';
+          callback();
+        }
+      }, 1000);
+    }
+
+    function takePhoto() {
+      snapSound.play();
+      context.save();
+      context.scale(-1, 1);  // Mirror the photo
+      context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+      context.restore();
+      context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+    }
+    
+</script>
+</body>
+</html>

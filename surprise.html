@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surprise</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Style for the surprise page */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #ffe6f0, #ffcce6);
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .envelope {
+      width: 100px;
+      height: 70px;
+      background-color: #ff99cc;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .envelope:hover {
+      transform: scale(1.1);
+    }
+    body {
+    background-image: url('assets/images/envbg.jpg'); /* Relative path */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    color: white; /* Adjust text color to be more readable on the background */
+    font-family: 'ArcadeClassic', sans-serif;
+    margin: 0;
+    padding: 0;
+    }
+    .envelope:active {
+      transform: translateY(4px);
+    }
+
+    .cd {
+      width: 250px;
+      height: 250px;
+      display: none;
+      margin-top: 20px;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .fadeOut {
+      animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    .controls {
+      display: none;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    
+
+    .arcade-button {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: white;
+      background-color: #ff66b2;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      box-shadow: 0 4px #cc528f;
+    }
+
+    .arcade-button:hover {
+      transform: scale(1.1);
+      background-color: #ff4da6;
+    }
+
+    .arcade-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px #cc528f;
+    }
+
+    .control-button {
+      padding: 5px 10px;
+      font-size: 1.5rem;
+    }
+
+    
+
+  
+  </style>
+</head>
+<body>
+  <div class="envelope" onclick="openEnvelope()">
+    ✉️
+  </div>
+  <img src="assets/images/cdqueni.png" alt="CD" class="cd" id="cd" onclick="togglePlayPause()">
+  <div class="controls" id="controls">
+    <button class="arcade-button control-button" onclick="rewindAudio()">Rewind</button>
+    <button class="arcade-button control-button" onclick="forwardAudio()">Fast forward(xd)</button>
+  </div>
+ 
+  <button class="arcade-button" onclick="window.location.href='index.html'">Back to Homepage</button>
+ 
+
+  <script>
+    // script.js
+
+function openEnvelope() {
+  const envelope = document.querySelector('.envelope');
+  const cd = document.getElementById('cd');
+  const controls = document.getElementById('controls');
+  const timeDisplay = document.getElementById('time-display');
+  const buttonEffect = new Audio('assets/sounds/buttoneffect1.mp3');
+
+  buttonEffect.play();
+  envelope.style.transform = 'scale(0)';
+  setTimeout(() => {
+    envelope.style.display = 'none';
+    cd.style.display = 'block';
+    controls.style.display = 'flex';
+    timeDisplay.style.display = 'block';
+  }, 300);
+}
+
+function togglePlayPause() {
+  const cd = document.getElementById('cd');
+  const audio = document.getElementById('audio');
+  const flower = document.getElementById('flower');
+
+  if (audio.paused) {
+    cd.style.animation = 'spin 5s linear infinite';
+    audio.play();
+  } else {
+    cd.style.animation = '';
+    audio.pause();
+  }
+
+  audio.addEventListener('ended', () => {
+    cd.style.animation = '';
+    setTimeout(() => {
+      flower.style.display = 'block';
+    }, 2000);
+  });
+}
+
+function rewindAudio() {
+  const audio = document.getElementById('audio');
+  audio.currentTime -= 10; // Rewind 10 seconds
+}
+
+function forwardAudio() {
+  const audio = document.getElementById('audio');
+  audio.currentTime += 10; // Forward 10 seconds
+}
+
+// Update the current and total time display
+const audio = document.getElementById('audio');
+const currentTimeElement = document.getElementById('current-time');
+const totalTimeElement = document.getElementById('total-time');
+
+audio.addEventListener('loadedmetadata', () => {
+  const minutes = Math.floor(audio.duration / 60);
+  const seconds = Math.floor(audio.duration % 60);
+  totalTimeElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+});
+
+audio.addEventListener('timeupdate', () => {
+  const minutes = Math.floor(audio.currentTime / 60);
+  const seconds = Math.floor(audio.currentTime % 60);
+  currentTimeElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+});
+
+  </script>
+
+  <!-- Audio Player -->
+  <audio id="audio">
+    <source src="assets/sounds/quenimaj0r.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+</body>
+</html>

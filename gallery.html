@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fef6ff;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .fade-in {
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .gallery-title {
+      font-size: 2.5rem;
+      color: #ff69b4;
+      text-shadow: 1px 1px 2px #d35a96;
+      margin-bottom: 0;
+    }
+
+    .gallery-intro {
+      font-size: 1rem;
+      color: #666;
+      margin: 0 0 20px;
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+
+    .arcade-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ff69b4;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1rem;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .arcade-button:hover {
+      background-color: #e056a4;
+      transform: translateY(-3px);
+      box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Image Gallery Styles */
+    .gallery-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      background: #fff;
+    }
+
+    .image-gallery {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      height: 100%;
+      scrollbar-width: thin;
+      scrollbar-color: #ff69b4 #fef6ff;
+    }
+
+    /* Scrollbar Styling */
+    .image-gallery::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .image-gallery::-webkit-scrollbar-thumb {
+      background-color: #ff69b4;
+      border-radius: 10px;
+    }
+
+    .image-gallery::-webkit-scrollbar-track {
+      background-color: #fef6ff;
+    }
+
+    .gallery-image {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gallery-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Heart Animation Styles */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #ff69b4;
+      transform: rotate(45deg);
+      animation: fadeOut 2s forwards;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #ff69b4;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      top: 0;
+      left: -10px;
+    }
+
+    @keyframes fadeOut {
+      to {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <div class="gallery-container">
+    <h1 class="gallery-title">Gallery<33</h1>
+    <p class="gallery-intro">the prettiest!</p>
+
+    <!-- Image Gallery -->
+    <div class="gallery-wrapper">
+      <div class="image-gallery" id="image-gallery">
+        <img src="assets/images/genshinpic.jpg" alt="Memory 1" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/boothpic.jpg" alt="Memory 2" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/herpic1.jpg" alt="Memory 3" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/herpic.jpg" alt="Memory 4" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/meandherpic.jpg" alt="Memory 5" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/queni2.jpg" alt="Memory 6" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/queni3.jpg" alt="Memory 7" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/queni4.jpg" alt="Memory 8" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/us1.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p1.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p2.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p3.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p4.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p5.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p6.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p7.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/p8.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+        <img src="assets/images/dog.jpg" alt="Memory 9" class="gallery-image" onclick="playButtonSound()">
+
+      </div>
+    </div>
+
+    <!-- Button Links -->
+    <div class="button-container">
+      <a href="index.html" class="arcade-button back-button">Back to Homepage🌸</a>
+    </div>
+  </div>
+
+  <!-- Audio player -->
+  <audio id="background-music" loop autoplay>
+    <source src="assets/sounds/quenimaj0r.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    document.addEventListener('mousemove', function(event) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = `${event.clientX}px`;
+      heart.style.top = `${event.clientY}px`;
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 2000);
+    });
+
+    function playButtonSound() {
+      const buttonSound = new Audio('assets/sounds/buttoneffect1.mp3');
+      buttonSound.play();
+    }
+  </script>
+</body>
+</html>
